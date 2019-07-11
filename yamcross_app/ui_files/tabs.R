@@ -1,116 +1,86 @@
-library(shinydashboardPlus)
 
-startTab <- argonTabItem(
-  tabName = "start",
-  argonRow(
-      argonCarousel(id = "carousel",
-        floating = TRUE, width = 12, hover_lift = TRUE,
-        
-        argonCarouselItem(
-          active = TRUE,
-          src = "images/1.jpg",
-          mode = "img"
-        ),
-        argonCarouselItem(
-          active = FALSE,
-          src = "images/2.jpg",
-          mode = "img"
-        ),
-        argonCarouselItem(
-          active = FALSE,
-          src = "images/3.jpg",
-          mode = "img"
-        ),
-        argonCarouselItem(
-          active = FALSE,
-          src = "images/4.jpg",
-          mode = "img"
-        ),
-        argonCarouselItem(
-          active = FALSE,
-          src = "images/5.jpg",
-          mode = "img"
-        )
+
+source("ui_files/carousels.R")
+
+homeTab <- div(
+  includeCSS("www/AdminLTE.css"),
+  includeScript("www/app.js"), 
+  
+  tags$style(".topimg {
+                              margin-left:-30px;
+                              margin-right:-30px;
+                              margin-top:-15px;
+                            }"), 
+  #div(class="topimg", img(src="images/yam.png", width="100%")),
+  column(8, offset = 2,
+    div(style = "width:12; height:550px;",
+      carousel
+      ), br(),br(),
+    
+    box(width = 12,
+      div(style = "text-align: center;",                             
+          bsButton("goOverview", label = "Overview",  style = "primary", size = "large", 
+                   disabled = FALSE, icon = icon("medkit", lib = "font-awesome")),                             
+          bsButton("goTables", label = "Data Tables",  style = "primary", size = "large", 
+                   disabled = FALSE, icon = icon("table", lib = "font-awesome")),
+          bsButton("goHelp", label = "About",  style = "primary", size = "large", 
+                   disabled = FALSE, icon = icon("question", lib = "font-awesome"))
       )
     ),
-  argonRow(
-    argonCard(
-      p("The yamcross is an automated data management system that integrates yambase with mobile app. 
-        This dashboard aggregates datasets from diferent locations for querrying and analytics purposes. 
-        It is built using R and Shiny. The code is available on github.")
-    )
+    tags$p(tags$span(class = "bold", "PLEASE NOTE:"), style="font-family:serif;",
+           "This webpage may time-out if left idle too long, which will cause the screen to grey-out.",
+           "To use the webpage again, refresh the page. This will reset all previously-selected input options.")
   )
 )
-overviewTab <- argonTabItem(
-  tabName = "overview",
+
+overviewTab <- div(
   
   uiOutput("infoboxOut"),
-  argonRow(
-    argonCard(width = 6,
-              highchartOutput("seeds")
-              )
-    
-  )
-)
-
-aboutTab <- argonTabItem(
-  tabName = "about",
-  argonRow(
-    argonCard(width = 8, icon = icon("cogs"), status = "success", shadow = TRUE, border_level = 2, hover_shadow = TRUE,
-              title = "About yamcross",
-              includeMarkdown("www/about.md")
-              
+  box(width = 6, title = "Number of crosses",
+      highchartOutput("number_crosses")
+    ),
+  box(width = 6, title = "Available seeds",
+      highchartOutput("seeds")
     )
+)
+
+
+dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), #selected = "Summary Table",
+  tabPanel("Summary Table",
+           column(1, offset = 11,
+                  downloadBttn("downloadSummary", "Download", style = "fill", size="sm", no_outline = FALSE)), 
+           box(width = 12,
+             div(style = 'overflow-x: scroll',
+                 DT::dataTableOutput("summaryTable"))
+            ), br(), br(),br(), # br(),br(), br(),
+           
+            uiOutput("drillOut")
+                
+           ),
+  tabPanel("Plant level data",
+           column(1, offset = 11,
+                  downloadBttn("downloadRaw", "Download", style = "fill", size="sm", no_outline = FALSE)),
+           box(width = 12,
+             div(style = 'overflow-x: scroll',
+                 DT::dataTableOutput("rawTable")),
+             verbatimTextOutput("txt")
+             )
   )
-)
-
-summaryTab <- argonTab(
-    tabName = "Summary Data",active = TRUE,
-    argonRow(
-      argonCard(width = 12, icon = icon("cogs"), status = "success", shadow = TRUE, border_level = 2, hover_shadow = TRUE,
-                argonRow(
-                   argonColumn(width=4,
-                       selectizeInput("group_by", "Group by:", c(names(familydata)[1:3]))
-                       ),
-                   argonColumn(width=7),
-                   argonColumn(width=1,
-                       downloadBttn("downloadSummary", "Download", style = "fill", size="sm", no_outline = FALSE)), # stretch
-                    
-                   div(style = 'overflow-x: scroll',
-                           DT::dataTableOutput("summaryTable")
-                   )
-                )
-        )
-      ),
-      uiOutput("drillOut")
-)
-
-rawTab <- argonTab(
- tabName = "Raw",
- argonRow(
-   argonCard(width = 12, icon = icon("cogs"), status = "success", shadow = TRUE, border_level = 2, hover_shadow = TRUE,
-       div(style = 'overflow-x: scroll',
-           DT::dataTableOutput("rawTable")
-       )
-   )
- )
-)
- 
-dataTab <- argonTabItem(
-  tabName = "data",
   
-  argonRow(
-    
-    # Horizontal Tabset
-    argonColumn(
-      width = 12,
-      # argonH1("Horizontal Tabset", display = 4),
-      argonTabSet(id = "dTabs", card_wrapper = TRUE, horizontal = TRUE, circle = FALSE, size = "sm", width = 12,
-       # iconList = lapply(X = 1:3, FUN = argonIcon, name = "atom"),
-        summaryTab,
-        rawTab
-      )
-    )
-  )
 )
+  
 
+  
+ aboutTab <- navlistPanel(
+   id = "aboutTabs", widths = c(2,10),
+   tabPanel("This app",
+            column(7,
+                   wellPanel(
+                     includeMarkdown("www/about.md")
+                   )
+              )
+            ),
+   tabPanel(a("using yamcross", href = "tutorial.html", target="_blank", icon=icon("note"))),
+   tabPanel(a("source code", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github")))
+ )
+ 

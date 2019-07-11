@@ -1,12 +1,9 @@
 
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinydashboard))
-suppressPackageStartupMessages(library(shinydashboardPlus))
 suppressPackageStartupMessages(library(shinyWidgets))
-library(shinyWidgets)
+suppressPackageStartupMessages(library(shinyBS))
 
-suppressPackageStartupMessages(library(argonR))
-suppressPackageStartupMessages(library(argonDash))
 suppressPackageStartupMessages(library(magrittr))
 
 suppressPackageStartupMessages(library(data.table))
@@ -29,15 +26,16 @@ yamdt = yamdata %>%
     Number_of_Bags = max(na.omit(BagNo)),
     First_Pollination = min(na.omit(Pollination_Date)),
     Last_Pollination = min(na.omit(Pollination_Date)),
-    Number_of_crosses = n_distinct(na.omit(CrossNumber)))
+    Number_of_crosses = n_distinct(na.omit(CrossNumber))
+    )
 
 colnames(yamdata) = gsub("_"," ", names(yamdata))
 
-familydata = fread("data/familydata.csv")
+familydata = read.csv("data/familydata.csv")
 familydata = familydata %>%
   dplyr::select(FamilyID, everything())
 
-familydata[,c("Genotype", "Male_Genotype")] %<>% mutate_all(as.factor) 
+#familydata[,c("Genotype", "Male_Genotype")] %<>% mutate_all(as.factor) 
 colnames(familydata) = gsub("_"," ", names(familydata))
 
 

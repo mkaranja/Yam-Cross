@@ -69,6 +69,7 @@ overview <- function(env_serv) with(env_serv, local({
  genotypesIn <- reactive({
    
    result = yamdata %>%
+      dplyr::filter(CrossNumber!='') %>%
      dplyr::select(contains("Genotype")) %>%
      tidyr::gather(id, name, contains("Genotype"), na.rm=T) %>%
      dplyr::group_by(name) %>%

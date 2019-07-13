@@ -19,7 +19,7 @@ tagList(
         collapsible = TRUE,
         theme = shinythemes::shinytheme("flatly"),
         windowTitle = "yamcross",
-        img(src = "africayam.png", height = "35px", width = "35px"),
+        img(src = "images/africayam.png", height = "35px", width = "35px"),
         
         
         #### HOME ####
@@ -27,7 +27,7 @@ tagList(
              title = strong(style = "color: orange; font-size:16;", "Yam Cross"), ##B2011D
              value = "home",
              icon = icon("home"),
-             br(),br(),br(),#br(),br(),br(),
+             br(),br(),br(),
              
              homeTab
         ),
@@ -36,8 +36,9 @@ tagList(
         tabPanel(
             title = "Overview",
             icon = icon("medkit", lib = "font-awesome"),
-            br(),br(), br(),br(),#br(),br(),
+            br(),br(), br(),br(),
             shinyjs::useShinyjs(), 
+            
             overviewTab
         ),
         
@@ -45,16 +46,16 @@ tagList(
         tabPanel(
             title = "Data Tables",
             icon = icon("table", lib = "font-awesome"),
-            br(),br(),br(),br(),#br(),br(),
+            br(),br(),br(),br(),
                 
-                dataTab
-            ),
+            dataTab
+        ),
         
         #### ABOUT ####
         tabPanel(
             title = "About",
             icon = icon("question", lib = "font-awesome"),
-            br(),br(),br(),br(),#br(),br(),
+            br(),br(),br(),br(),
             
             aboutTab
         )

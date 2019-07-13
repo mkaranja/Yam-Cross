@@ -8,7 +8,7 @@ data <- function(env_serv) with(env_serv, local({
     dt = familydata
     if(!is.null(input$bar_clicked)){
       dt = familydata %>%
-        dplyr::filter(FamilyID %in% input$bar_clicked[1])
+        dplyr::filter(Family %in% input$bar_clicked[1])
     }
     return(dt)
   })
@@ -40,9 +40,9 @@ data <- function(env_serv) with(env_serv, local({
   drilldata <- reactive({
     dt = yamdata
     id = input$summaryTable_cell_clicked$value
-    if(length(id)>0 && id %in% yamdata$FamilyID){
+    if(length(id)>0 && id %in% yamdata$Family){
     dt = yamdata %>%
-      dplyr::filter(FamilyID %in% id)
+      dplyr::filter(Family %in% id)
     } 
     dt
   })

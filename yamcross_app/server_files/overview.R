@@ -12,59 +12,85 @@ overview <- function(env_serv) with(env_serv, local({
       tally()
   })
   
-  crossesIn <- reactive({
-    result = yamdata %>%
-      dplyr::group_by(`Female Genotype`, `Male Genotype`) %>%
-      tally()
-  })
-  
-  availableseedsIn <- reactive({
-    familydata %>% dplyr::filter(`Available Seeds`>0)
-    
-  })
-  
-  crossesIn <- reactive({
-    result = familydata %>%
-      dplyr::filter(Number_of_crosses>0)
-  })
-  
- output$infoboxOut <- renderUI({
-   
-   div(
-       valueBox(width = 3,
-         value = sum(as.integer(na.omit(familydata$`Number of crosses`))),
-         subtitle = "Crosses", 
-         color = "light-blue"
-       ),
-       valueBox(width = 3,
-         value = sum(na.omit(as.integer(availableseedsIn()$`Available Seeds`))), 
-         subtitle = "Available Seeds", 
-         color = "light-blue"
-       ),
-       valueBox(width = 3,
-         value = sum(na.omit(as.integer(familydata$`Number of Seedlings Germinating`))), 
-         subtitle = "Seedling germination", 
-         color = "light-blue"
-       ),
-       valueBox(width = 3,
-         value = sum(na.omit(as.integer(familydata$`Number of Sprouting Tubers`))), 
-         subtitle = "Sprouting",  
-         color = "light-blue"
-       )
-   )
- })
- 
  output$n_crosses <- renderValueBox({
    
    box1<-valueBox(value=sum(as.integer(na.omit(familydata$`Number of crosses`))),
                   color = "teal",
                   href="#",
-                  subtitle=HTML("<b>Crosses</b><br>", n_distinct(familydata$Family)," Unique combinations")
+                  subtitle=HTML("<b>Crosses</b><br>", n_distinct(familydata$Family)," Genotypes")
    )
    box1$children[[1]]$attribs$class<-"action-button"
-   box1$children[[1]]$attribs$id<-"button_n_crosses"
+   box1$children[[1]]$attribs$id<-"button_crosses"
    return(box1)
  })
+ 
+ 
+ observeEvent(input$button_crosses, {
+   updateTabsetPanel(session, "nav",
+                     selected = "Data Tables")
+ })
+ 
+ #----------------------------------------------------------------------------------------------------------------
+ availableseedsIn <- reactive({
+   familydata %>% dplyr::filter(`Available Seeds`>0)
+   
+ })
+ output$n_availableseeds <- renderValueBox({
+    n = familydata %>%
+       dplyr::filter(`Available Seeds`>0)
+    box1<-valueBox(value=sum(as.integer(na.omit(familydata$`Available Seeds`))),
+                   color = "teal",
+                   href="#",
+                   subtitle=HTML("<b>Available seeds</b><br>", n_distinct(n$Family)," Genotypes")
+    )
+    box1$children[[1]]$attribs$class<-"action-button"
+    box1$children[[1]]$attribs$id<-"button_availableseeds"
+    return(box1)
+ })
+ 
+ observeEvent(input$button_availableseeds, {
+   updateTabsetPanel(session, "nav",
+                     selected = "Data Tables")
+ })
+ #---------------------------------------------------------------------------------------------------------------------
+ output$n_seedlinggermination <- renderValueBox({
+    n = familydata %>%
+       dplyr::filter(`Number of Seedlings Germinating`>0)
+    box1<-valueBox(value=sum(as.integer(na.omit(familydata$`Number of Seedlings Germinating`))),
+                   color = "teal",
+                   href="#",
+                   subtitle=HTML("<b>Number of seedlings germinating</b><br>", n_distinct(n$Family)," Genotypes")
+    )
+    box1$children[[1]]$attribs$class<-"action-button"
+    box1$children[[1]]$attribs$id<-"button_seedlinggermination"
+    return(box1)
+ })
+ 
+ observeEvent(input$button_seedlinggermination, {
+   updateTabsetPanel(session, "nav",
+                     selected = "Data Tables")
+ })
+ 
+ # ----------------------------------------------------------------------------------------------------------------------
+ output$n_sproutingtubers <- renderValueBox({
+    n = familydata %>%
+       dplyr::filter(`Number of Sprouting Tubers`>0)
+    box1<-valueBox(value=sum(as.integer(na.omit(familydata$`Number of Sprouting Tubers`))),
+                   color = "teal",
+                   href="#",
+                   subtitle=HTML("<b>Number of tubers sprouting</b><br>", n_distinct(n$Family)," Genotypes")
+    )
+    box1$children[[1]]$attribs$class<-"action-button"
+    box1$children[[1]]$attribs$id<-"button_sproutingtubers"
+    return(box1)
+ })
+ 
+ observeEvent(input$button_sproutingtubers, {
+   updateTabsetPanel(session, "nav",
+                     selected = "Data Tables")
+ })
+ 
+ #-------------------------------------------------------------------------------------------------------------------------
  # Most Used Genotypes
  genotypesIn <- reactive({
    
@@ -121,7 +147,11 @@ overview <- function(env_serv) with(env_serv, local({
  
  output$germination <- renderPlot({
    ggplot(germinationIn, aes(x = Family, y = `Number of seeds`, fill = category)) +   # Fill column
-     geom_bar(stat = "identity", width = .6) +   # draw the bars
+       # geom_bar(subset = .(category == "Number yet to Germinate"), stat = "identity") + 
+       # geom_bar(subset = .(category == "Number of Seedlings Germinating"), stat = "identity") + 
+      geom_bar(stat = "identity", width = .6) +   # draw the bars
+       scale_y_continuous(breaks = seq(-500, 500, 50), 
+                          labels = paste0(as.character(c(seq(50,0,-5), seq(5,50,5))), "0")) + 
      coord_flip() +  # Flip axes
      labs(title="Seedling Germination", xaxis="") +
      theme_tufte() +  # Tufte theme from ggfortify

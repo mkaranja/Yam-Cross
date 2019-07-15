@@ -14,21 +14,29 @@ suppressPackageStartupMessages(library(highcharter))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggthemes))
 suppressPackageStartupMessages(library(ECharts2Shiny))
+suppressPackageStartupMessages(library(RColorBrewer))
 
-yamdata = fread("data/yamdata.csv")
+yamdata = read.csv("data/yamdata.csv")
 familydt = read.csv("data/familydata.csv") 
 
 
 # Clean data
-yamdata = yamdata[,-c("Site","Other","Geopoint")]
+yamdata = yamdata %>%
+  dplyr::select(-c("Site","Other","Geopoint"))
 colnames(yamdata)[3] = "Female_Genotype"
 yamdata$Family = ifelse(!is.na(yamdata$Male_Genotype),paste0(yamdata$Female_Genotype,"/",yamdata$Male_Genotype),"")
 
 yamdata = yamdata %>%
    dplyr::select(PlantName, Planting_Date, Bagging_Date, BagCode, CrossNumber, Family,Female_Genotype, Male_Genotype, everything())
 
+yamdata[,c("Female_Genotype", "Male_Genotype", "Family")] %<>% mutate_all(as.factor) 
+yamdata[,c("Number_of_Flowers","Number_of_Fruits","Total_Fruits", "Total_Seeds_Extracted","Good_Seeds")] %<>% mutate_all(as.integer) 
+yamdata[,c("Planting_Date","Bagging_Date", "Pollination_Date", "Fruit_Set_Date","Fruit_Harvest_Date",
+           "Seed_Processing_Date")] %<>% mutate_all(as.Date, '1492-11-29', format='%Y-%m-%d')
 
 yamdt = yamdata %>%
+  dplyr::filter(!is.na(Male_Genotype))
+yamdt %<>%
   dplyr::group_by(Family) %>%
   summarise(
     Number_of_Plants = n(),
@@ -52,12 +60,7 @@ yam = dplyr::left_join(yamdata[,c("Family", "Female_Genotype", "Male_Genotype","
   dplyr::filter(!is.na(Male_Genotype)) %>%
   unique()
 yamdata$BagNo = NULL
-yamdata[,c("Female_Genotype", "Male_Genotype", "Family")] %<>% mutate_all(as.factor) 
-yamdata[,c("Number_of_Flowers","Number_of_Fruits","Total_Fruits", "Total_Seeds_Extracted","Good_Seeds")] %<>% mutate_all(as.integer) 
-yamdata[,c("Planting_Date","Bagging_Date", "Pollination_Date", "Fruit_Set_Date","Fruit_Harvest_Date",
-           "Seed_Processing_Date")] %<>% mutate_all(as.Date, '1492-11-29', format='%Y-%m-%d')
 
-familydt %<>% mutate_all(as.character)
 colnames(familydt)[1]="Family"
 familydt$Total_Seeds = NULL
 

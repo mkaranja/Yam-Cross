@@ -7,17 +7,16 @@ shinyServer(function(input, output, session) {
     
     env_serv = environment()
     
+    observeEvent(input$nav=='home', {
+        shinyjs::reset('nav')
+    })
+    
     overview(env_serv)
     
     data(env_serv)
     
     ## Home page
     # instruction to make buttons work
-    observe({
-        if(input$goOverview){
-            updateTabsetPanel(session, "nav", selected = "Overview")
-        }
-    })
     
     observe({
         if(input$goTables){

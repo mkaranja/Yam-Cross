@@ -38,12 +38,12 @@ overviewTab <- div(
   #uiOutput("infoboxOut"),
   fluidRow(
     
-    tags$style("#n_crosses .small-box, #n_availableseeds .small-box, #n_seedlinggermination .small-box, #n_sproutinttubers .small-box {cursor: pointer;}"),
+    tags$style("#n_crosses .small-box, #n_availableseeds .small-box, #n_seedlinggermination .small-box, #n_sproutingtubers .small-box {cursor: pointer;}"),
     
-    valueBoxOutput("n_crosses", width = 2),tags$style("#n_crosses"), # tags$style("#n_crosses {width:220px;}")
-    valueBoxOutput("n_availableseeds", width = 2), tags$style("#n_availableseeds"),
-    valueBoxOutput("n_seedlinggermination", width = 2), tags$style("#n_seedlinggermination"),
-    valueBoxOutput("n_sproutinttubers", width = 2), tags$style("#n_sproutinttubers")
+    valueBoxOutput("n_crosses", width = 3),tags$style("#n_crosses"),
+    valueBoxOutput("n_availableseeds", width = 3), tags$style("#n_availableseeds"),
+    valueBoxOutput("n_seedlinggermination", width = 3), tags$style("#n_seedlinggermination"),
+    valueBoxOutput("n_sproutingtubers", width = 3), tags$style("#n_sproutingtubers")
   ),
   box(width=8,  status = "primary", solidHeader = T),
   box(width=4, status = "primary", solidHeader = T,
@@ -65,28 +65,41 @@ overviewTab <- div(
 )
 
 
-dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), #selected = "Summary Table",
+dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Table",
   tabPanel("Summary Table",
-           column(1, offset = 11,
-                  downloadBttn("downloadSummary", "Download", style = "fill", size="sm", no_outline = FALSE)), 
-           box(width = 12,
-             div(style = 'overflow-x: scroll',
-                 DT::dataTableOutput("summaryTable"))
-            ), br(), br(),br(), 
            
-            uiOutput("drillOut")
-                
+           wellPanel(
+             fluidRow(
+               column(1, offset = 11,
+                      downloadBttn("downloadSummary", "Download", style = "fill", size="xs", no_outline = FALSE)), 
+               column(12,
+                   div(style = 'overflow-x: scroll',
+                       DT::dataTableOutput("summaryTable")), br(),
+                   tags$p(style = "font-size: 14px; color: blue","Click on any value under Family column to display specific details"),
+                   verbatimTextOutput("txt1"),
+                   verbatimTextOutput("txt2"),
+                   verbatimTextOutput("txt3"),
+                   verbatimTextOutput("txt4")
+               )
+             ), br()
            ),
+           wellPanel(
+             fluidRow(
+                uiOutput("drillOut")
+             ))
+           ),
+
   tabPanel("Plant level data",
-           column(4, offset = 1,
-                  selectInput("group_by","Group by:", c("Female Genotype", "Male Genotype","Family"), multiple = T, width = "100%")
-                  ),
-           column(1, offset = 6,
-                  downloadBttn("downloadRaw", "Download", style = "fill", size="sm", no_outline = FALSE)),
-           box(width = 12,
-             div(style = 'overflow-x: scroll',
-                 DT::dataTableOutput("rawTable"))
+           wellPanel(
+             fluidRow(
+               column(1, offset = 11,
+                      downloadBttn("downloadRaw", "Download", style = "fill", size="xs", no_outline = FALSE)),
+               column(12,
+                 div(style = 'overflow-x: scroll',
+                       DT::dataTableOutput("rawTable"))
+                 )
              )
+           )
   )
   
 )

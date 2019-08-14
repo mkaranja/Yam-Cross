@@ -38,30 +38,21 @@ overviewTab <- div(
   #uiOutput("infoboxOut"),
   fluidRow(
     
-    tags$style("#n_crosses .small-box, #n_availableseeds .small-box, #n_seedlinggermination .small-box, #n_sproutingtubers .small-box {cursor: pointer;}"),
+    tags$style("#n_plants .small-box, #n_crosses .small-box,#n_totalseeds .small-box, #n_availableseeds .small-box, #n_seedlinggermination .small-box, #n_sproutingtubers .small-box {cursor: pointer;}"),
     
-    valueBoxOutput("n_crosses", width = 3),tags$style("#n_crosses"),
-    valueBoxOutput("n_availableseeds", width = 3), tags$style("#n_availableseeds"),
-    valueBoxOutput("n_seedlinggermination", width = 3), tags$style("#n_seedlinggermination"),
-    valueBoxOutput("n_sproutingtubers", width = 3), tags$style("#n_sproutingtubers")
+    valueBoxOutput("n_plants", width = 2),tags$style("#n_plants"),
+    valueBoxOutput("n_crosses", width = 2),tags$style("#n_crosses"),
+    valueBoxOutput("n_totalseeds", width = 2), tags$style("#n_totalseeds"),
+    valueBoxOutput("n_availableseeds", width = 2), tags$style("#n_availableseeds"),
+    valueBoxOutput("n_seedlinggermination", width = 2), tags$style("#n_seedlinggermination"),
+    valueBoxOutput("n_sproutingtubers", width = 2), tags$style("#n_sproutingtubers")
   ),
-  box(width=8,  status = "primary", solidHeader = T),
-  box(width=4, status = "primary", solidHeader = T,
-      loadEChartsLibrary(),
-      title = "Most crossed genotypes",
-      tags$div(id="freq_genotypes", style="width:100%;height:476px;"),  # Specify the div for the chart. Can also be considered as a space holder
-      deliverChart(div_id = "freq_genotypes")  # Deliver the plotting
-      
-  ),
-  box(width = 4, solidHeader = T, title = "Available seeds by genotypes",
-      status = "primary",
-      highchartOutput("seeds")
-  ),
-  column(1),
-  box(width = 7, solidHeader = T, title = "Seedling Germination by genotype",
-      status = "primary",
-      plotOutput("germination")
-    )
+  uiOutput('numberOfCrossesOut'),
+  uiOutput('mostCrossedGenotypes'), br(),
+  
+  uiOutput('availableSeedsOut')
+  
+  # uiOutput("germinationOut")
 )
 
 
@@ -75,33 +66,25 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
                column(12,
                    div(style = 'overflow-x: scroll',
                        DT::dataTableOutput("summaryTable")), br(),
-                   tags$p(style = "font-size: 14px; color: blue","Click on any value under Family column to display specific details"),
-                   verbatimTextOutput("txt1"),
-                   verbatimTextOutput("txt2"),
-                   verbatimTextOutput("txt3"),
-                   verbatimTextOutput("txt4")
+                   tags$p(style = "font-size: 12px; color: maroon",
+                          "Click Family, Female Genotype or Male Genotype to display specific details below")
                )
              ), br()
-           ),
-           wellPanel(
-             fluidRow(
-                uiOutput("drillOut")
-             ))
-           ),
+           )
+          ),
 
-  tabPanel("Plant level data",
+  tabPanel("Details Table",
            wellPanel(
              fluidRow(
                column(1, offset = 11,
-                      downloadBttn("downloadRaw", "Download", style = "fill", size="xs", no_outline = FALSE)),
+                      downloadBttn("downloadDetails", "Download", style = "fill", size="xs", no_outline = FALSE)),
                column(12,
                  div(style = 'overflow-x: scroll',
-                       DT::dataTableOutput("rawTable"))
+                       DT::dataTableOutput("detailsTable"))
                  )
              )
            )
-  )
-  
+    )
 )
   
 

@@ -8,7 +8,7 @@ data <- function(env_serv) with(env_serv, local({
     dt = familydata
     if(!is.null(input$bar_clicked)){
       dt = dt %>%
-        dplyr::filter(Family %in% input$bar_clicked[1])
+        dplyr::filter(FamilyName %in% input$bar_clicked[1])
     }
     if(!is.null(input$button_availableseeds) && input$button_availableseeds[1]>0){
      dt = dt %>%
@@ -22,7 +22,8 @@ data <- function(env_serv) with(env_serv, local({
       dt = dt %>%
         dplyr::filter(`Number of Sprouting Tubers` > 0)
     }
-    dt
+    dt  %<>%
+      janitor::remove_empty("cols")
   })
   
  
@@ -42,22 +43,43 @@ data <- function(env_serv) with(env_serv, local({
     }
   )
 
-  # drilldown table
-  
-  drilldata <- reactive({
-    dt = yamdata
-    id = input$summaryTable_cell_clicked$value
-    
-    if(length(id)>0 && id %in% yamdata$Family){
-      dt = yamdata %>%
-        dplyr::filter(Family %in% id)
-    } 
-    dt %<>%
-      dplyr::select(Family, everything())
+  output$txt1 <- renderPrint({
+    input$summaryTable_cell_clicked$value
   })
   
+  # details table
+  observeEvent(input$summaryTable_cell_clicked$value,{
+    updateTabItems(session, "dataTabs", "Details Table")
+  })
   
-  drillName <- reactive({
+  detailsIn <- reactive({
+    dt = yamdata
+    #dt[dt=='<NA>'] <- NA
+    id = input$summaryTable_cell_clicked$value
+    
+    if(length(id)>0 && id %in% yamdata$FamilyName){
+      dt = yamdata %>%
+        dplyr::filter(FamilyName %in% id)
+    } 
+    if(length(id)>0 && id %in% yamdata$`Female Genotype`){
+      dt = yamdata %>%
+        dplyr::filter(`Female Genotype` %in% id)
+    } 
+    if(length(id)>0 && id %in% yamdata$`Male Genotype`){
+      dt = yamdata %>%
+        dplyr::filter(`Male Genotype` %in% id)
+    } 
+    if(nrow(dt)>0){
+      dt %<>%
+        dplyr::select(FamilyName, everything()) %>%
+        janitor::remove_empty("cols")
+    } else {
+      dt %<>%
+        janitor::remove_empty("cols")
+    }
+  })
+  
+  detailsName <- reactive({
     name = "data"
     if(length(input$summaryTable_cell_clicked$value)>0){
       name = input$summaryTable_cell_clicked$value
@@ -65,51 +87,23 @@ data <- function(env_serv) with(env_serv, local({
     return(name)
   })
   
-  output$drillOut <- renderUI({
-    id = input$summaryTable_cell_clicked$value
-    if(length(id)>0 && id %in% yamdata$Family){
-      div(
-      column(1, offset = 11,
-             downloadBttn("drillDownload", "Download", style = "fill", size="xs", no_outline = FALSE)), 
-      column(width = 12, tags$p(style = "color: #8D0610; font-size: 18px; font-weight: bold; text-align: center;",input$summaryTable_cell_clicked$value),
-          div(style = 'overflow-x: scroll',
-              DT::dataTableOutput("drilldownTable"))
-        )
-      )
-    }
-  })
   
-  output$drilldownTable <- DT::renderDataTable({
+  
+  # Details data table
+  
+   output$detailsTable <- DT::renderDataTable({
     
-    DT::datatable(drilldata(), filter = 'top', rownames = FALSE, escape = FALSE, 
-                  options = list(pageLength = 5, lengthMenu = c(5, 10, 50, 100, 500,1000),
-                                 searchHighlight=T, stateSave = TRUE))
-  })
-  
-  
-  output$drillDownload <- downloadHandler(
-    filename = function(){paste(input$summaryTable_cell_clicked$value,"_",Sys.Date(),".csv")},
-    content = function(file) {
-      write.csv(drilldata(), file, row.names = FALSE)
-    }
-  )
-  
-  
-  # all data table
-  
-  
-   output$rawTable <- DT::renderDataTable({
-    
-    DT::datatable(yamdata, filter = 'top', rownames = FALSE, escape = FALSE, 
+    DT::datatable(detailsIn(), filter = 'top', rownames = FALSE, escape = FALSE, 
                   options = list(pageLength = 5, lengthMenu = c(5, 10, 50, 100, 500,1000),
                                  searchHighlight=T, stateSave = TRUE))
   })
    
-   output$downloadRaw <- downloadHandler(
-     filename = function(){paste(drillName(),"-", Sys.Date(),".csv")},
+   output$downloadDetails <- downloadHandler(
+     filename = function(){paste(detailsName(),"-", Sys.Date(),".csv")},
      content = function(file) {
-       write.csv(dt(), file, row.names = FALSE)
+       write.csv(detailsIn(), file, row.names = FALSE)
      }
    )
+   
 })
 )

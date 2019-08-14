@@ -1,6 +1,4 @@
 
-library(shinybulma)
-
 source("ui_files/tabs.R")
 
 # Begin shinyUI -----------------------------------------------------------
@@ -24,7 +22,7 @@ tagList(
         
         #### HOME ####
         tabPanel(
-             title = strong(style = "color: orange; font-size:16;", "Yam Cross"), ##B2011D
+             title = strong(style = "color: orange;text-highlight:yellow; font-size:16;", "Yam Cross"), ##B2011D
              value = "home",
              icon = icon("home"),
              br(),br(),br(),
@@ -52,13 +50,19 @@ tagList(
         ),
         
         #### ABOUT ####
-        tabPanel(
-            title = "About",
-            icon = icon("question", lib = "font-awesome"),
-            br(),br(),br(),br(),
-            
-            aboutTab
-        )
+        navbarMenu("About",
+           tabPanel(
+               a("Using yamcross", href="usingyamcross.html", target="_blank")
+               
+           )
+                   )
+        # tabPanel(
+        #     title = "About",
+        #     icon = icon("question", lib = "font-awesome"),
+        #     br(),br(),br(),br(),
+        #     
+        #     aboutTab
+        # )
     ) # End navbarPage
 ) # End tagList
 

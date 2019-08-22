@@ -1,17 +1,14 @@
-"CrossNumber","PlantName","Planting_Date","Bagging_Date","BagCode","BagNo","Female_Genotype","Male_Genotype","Pollination_Date","Number_of_Flowers","Fruit_Set_Date","Number_of_Fruits","Fruit_Harvest_Date","Total_Fruits","Seed_Processing_Date","Total_Seeds_Extracted"
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag6",6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag5",5,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag4",4,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag3",3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_3",NA,"2019-08-07","TDr2491A_1_3_Bag3",3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag2",2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_1",NA,"2019-08-07","TDr2491A_1_1_Bag2",2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_3",NA,"2019-08-07","TDr2491A_1_3_Bag2",2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018.Drought material_rep1_TDr9519127_1001","2019-March-05","2019-08-07","_Bag2",2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_1_Bag1",NA,"2019-08-07","2018-Abuja-_2018.Female crossing block.AB_1_plant_1_Bag1_Bag2",2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_7_plant_11",NA,"2019-08-06","TDrAloshie_7_11_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_1",NA,"2019-08-07","TDr2491A_1_1_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_3",NA,"2019-08-07","TDr2491A_1_3_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018.Drought material_rep1_TDr9519127_1001","2019-March-05","2019-08-07","_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_1_Bag1",NA,"2019-08-07","2018-Abuja-_2018.Female crossing block.AB_1_plant_1_Bag1_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,"2018-Abuja-_2018.Female crossing block.AB_1_plant_2",NA,"2019-08-07","2018-Abuja-_2018.Female crossing block.AB_1_plant_2_Bag1",1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"CrossNumber","Site","PlantName","Genotype","Planting_Date","Bagging_Date","Day","BagCode","BagNo","Female_Genotype","Male_Genotype","Pollination_Date","Number_of_Flowers","Pollinator_Name","Fruit_Set_Date","Number_of_Fruits","Fruit_Harvest_Date","Total_Fruits","Seed_Processing_Date","Total_Seeds_Extracted"
+"201908_(TDr9518544_3_10_Bag1/TDrAloshie_7_1)","Abuja","2018-Abuja-_2018.Female crossing block.AB_3_plant_10","TDr9518544",NA,"2019-08-08",NA,"TDr9518544_3_10_Bag1","1","TDr9518544","TDrAloshie","2019-08-14","8",NA,"2019-08-17","7","2019-08-24","7","2019-09-08","38"
+"201908_(TDr9518544_3_10_Bag2/TDrAloshie_7_2)","Abuja","2018-Abuja-_2018.Female crossing block.AB_3_plant_10","TDr9518544",NA,"2019-08-08",NA,"TDr9518544_3_10_Bag2","2","TDr9518544","TDrAloshie","2019-08-15","25",NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_7_plant_4","TDrAloshie",NA,"2019-08-21","1","42806","42806",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_7_plant_4","TDrAloshie",NA,"2019-08-21","1","42702","42702",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_7_plant_4","TDrAloshie",NA,"2019-08-21","1","42820","42820",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag9","9",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag8","8",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag11","11",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag10","10",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-08",NA,"TDr2491A_1_1_Bag3","3",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_2","TDr2491A",NA,"2019-08-08",NA,"TDr2491A_1_2_Bag2","2",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag7","7",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,"Abuja","2018-Abuja-_2018.Female crossing block.AB_1_plant_1","TDr2491A",NA,"2019-08-09",NA,"TDr2491A_1_1_Bag6","6",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

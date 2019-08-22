@@ -11,25 +11,26 @@ homeTab <- div(
                               margin-right:-30px;
                               margin-top:-15px;
                             }"), 
-  #div(class="topimg", img(src="images/yam.png", width="100%")),
+  fluidPage(
   column(8, offset = 2,
-    div(style = "width:12; height:550px;",
+    div(style = "width:12;", # height:570px;
       carousel
-      ), br(),br(),
+      ), br(),
     
-    box(width = 12,
+    box(width = 12, status = "primary",
       div(style = "text-align: center;",                             
           bsButton("goOverview", label = "Overview",  style = "primary", size = "large", 
                    disabled = FALSE, icon = icon("medkit", lib = "font-awesome")),                             
           bsButton("goTables", label = "Data Tables",  style = "primary", size = "large", 
                    disabled = FALSE, icon = icon("table", lib = "font-awesome")),
           bsButton("goHelp", label = "About",  style = "primary", size = "large", 
-                   disabled = FALSE, icon = icon("question", lib = "font-awesome"))
+                   disabled = FALSE, icon = icon("info", lib = "font-awesome"))
       )
     ),
-    tags$p(tags$span(class = "bold", "PLEASE NOTE:"), style="font-family:serif;",
+    tags$p(tags$span(class = "bold", "PLEASE NOTE:"), style="font-family:serif;text-align: center;",
            "This webpage may time-out if left idle too long, which will cause the screen to grey-out.",
-           "To use the webpage again, refresh the page. This will reset all previously-selected input options.")
+           "To use it again, refresh the page.")
+    )
   )
 )
 
@@ -87,35 +88,98 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
     )
 )
   
-
-  
- aboutTab <- navlistPanel(
-   id = "aboutTabs", widths = c(2,10),
-   tabPanel("This app",
-            column(7,
-                   wellPanel(
-                     includeMarkdown("www/about.md")
-                   )
-              )
+  labelsTab <- div(
+    fluidRow(
+      includeCSS("www/AdminLTE.css"), # for activating shinydashboard/plus widgets
+      
+      sidebarLayout(
+        sidebarPanel(width = 3,
+          fluidRow(
+            selectInput("type", "Barcode Type", choices = list("Matrix (2D)" = "matrix", "Linear (1D)" = "linear"), multiple = F),
+            
+            fluidRow(
+              column(6,
+                     numericInput("font_size", "Font Size", value = 12, min = 5, max = 20, step = 1)),
+              
+              column(6,
+                     radioButtons("across", "Print across?", choices = c(Yes = TRUE, No = FALSE), selected = TRUE, inline = T)),
+              checkboxInput("trunc", "Truncate label text?", value=FALSE)
+            ), br(), 
+            
+            box(width=12,collapsed = TRUE, collapsible = TRUE, title = 'Page Setup', status = 'info', solidHeader = T,
+                fluidRow(
+                  column(4,
+                         numericInput("page_height", "Page height", value = 11, min = 1, max = 20, width=NULL, step = 0.5),
+                         numericInput("page_width", "Page width", value = 8.5, min = 1, max = 20, width=NULL, step = 0.5)),
+                  column(5,
+                         numericInput("height_margin", "Page height margin", value = 0.5, min = 0, max = 20, width=NULL, step = 0.05),
+                         numericInput("width_margin", "Page width margin", value = 0.25, min = 0, max = 20, width=NULL, step = 0.05)),
+                  column(3,
+                         numericInput("numrow", "Rows", value = 10, min = 1, max = 100, width=NULL, step = 1),
+                         numericInput("numcol", "Columns", value = 1, min = 1, max = 10, width=NULL, step = 1))
+                ), hr(),
+                
+                fluidRow(
+                  
+                  column(4,
+                         numericInput("label_width", "Label width", value = NA, min=0, max=100),
+                         numericInput("label_height", "Label height", value = NA, min=0, max=100)),
+                  column(8,
+                         numericInput("x_space", "Horizontal space btn barcode & text", value = 0, min = 0, max = 1),
+                         numericInput("y_space", "Vertical location of text on label", value = 0.5, min = 0, max = 1)), br(),
+                  column(12,
+                         selectInput(inputId = "err_corr", label = "Error Correction", 
+                                     choices = c("L (up to 7% damage)"="L", "M (up to 15% damage)"= "M", "Q (up to 25% damage)" = "Q", "H (up to 30% damage)" = "H"),
+                                     multiple=FALSE, width = "50%"))
+                )
+                ),
+            br(),
+            
+            withBusyIndicatorUI(
+              actionBttn("make_pdf", "Generate", color = 'success', icon = icon('play'), size = 'sm', style = 'jelly')), hr(),
+            
+            column(8,
+                   textInput("filename", "Enter PDF file name", value = "LabelsOutput", placeholder = 'type name of pdf to download')),
+            column(4, br(),
+                   downloadBttn('downloadpdf', 'PDF', size = 'sm', color = 'primary', style = 'unite')),
+            verbatimTextOutput('txt33')
+            
+          )
+        ),
+        mainPanel(
+          
+          # output elements
+          fluidRow(
+            tags$p(style = "color: black; font-size: 28px; text-align: center;","Barcode generator"),
+            tags$p(style = "color: green; font-size: 18px; text-align: center;","Generate and download barcodes in a pdf file"), br(),
+            
+            tags$p(style = "color: #FF8C00; font-size: 16px; text-align: center;", "Preview")
             ),
-   tabPanel(a("using yamcross", href = "tutorial.html", target="_blank", icon=icon("note"))),
-   tabPanel(a("Code on github", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github")))
+            fluidRow(
+                uiOutput('labels_previewOut')
+              ), br(), hr(),
+            fluidRow(
+                uiOutput('selVarOut')
+            ),
+             
+          fluidRow(   
+            tags$p(style = "color:green; font-size: 18px; text-align: left;","Click on any cell in table below corresponding to the desired column to select field for barcode information"), br(),
+            
+                
+                wellPanel( 
+                  div(style = 'overflow-x: scroll',
+                      DT::DTOutput("check_make_labels")
+                  )
+                )
+            
+          )
+        )
+      )
+  )
+  )
+ aboutTab <- navlistPanel(
+   id = "aboutTabs", widths = c(2,10), 
+   tabPanel(a("using yamcross", href = "usingyamcross.html", target="_blank", icon=icon("question", lib = "font-awesome"))),
+   tabPanel(a("Code on github", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github", lib = "font-awesome")))
  )
  
-# footer <- bulmaFooter(
-#   tags$ul(a(href = 'https://africayam.org/',
-#             img(src = 'africayam.png',
-#                 title = "", height = "50px"),
-#             style = "padding-top:5px; padding-bottom:5px;"),
-#           
-#           a(href = 'https://iita.org/',
-#             img(src = 'iita.png',
-#                 title = "", height = "50px"),
-#             style = "padding-top:5px; padding-bottom:5px;"),
-#           
-#           a(href = 'https://btiscience.org/',
-#             img(src = 'bti.png',
-#                 title = "", height = "50px"),
-#             style = "padding-top:5px; padding-bottom:5px;"),
-#           class = "dropdown", style="center")
-# )

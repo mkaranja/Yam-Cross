@@ -17,6 +17,15 @@ suppressPackageStartupMessages(library(ECharts2Shiny))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(naniar))
 suppressPackageStartupMessages(library(shinycssloaders))
+suppressPackageStartupMessages(library(baRcodeR))
+suppressPackageStartupMessages(library(qrencoder))
+
+
+
+suppressPackageStartupMessages(library(baRcodeR))
+
+source("helpers.R") # Load all the code needed to show feedback on a button click
+
 
 yamdata = read.csv("data/yamdata.csv") %>%
   mutate_all(as.character)
@@ -31,7 +40,6 @@ familydata[, grep("Date", names(familydata))] %<>% mutate_all(as.Date)
 familydata[,c("Start_of_Sowing","End_of_Sowing")] %<>% mutate_all(as.Date, origin="1970-01-01")
 familydata[,grep("_Genotype", names(familydata))] %<>% mutate_all(as.factor)
 familydata[,grep("Number_", names(yamdata))] %<>% mutate_all(as.integer)
-#familydata$Germination_Rate = as.numeric(familydata$Germination_Rate)
 
 # Clean data
 yamdata$FamilyName = ifelse(!is.na(yamdata$Male_Genotype),paste0(yamdata$Female_Genotype,"/",yamdata$Male_Genotype),"")
@@ -73,15 +81,6 @@ familydata = familydata %>%
 
 familydata = familydata  %>%
   dplyr::filter(!is.na(FamilyName))
-# seedlings_germinating = familydata %>%
-#   dplyr::filter(!is.na(`Number_of_Seedlings_Germinating`))
-# if(nrow(seedlings_germinating)>0){
-# familydata$`Number yet to Germinate` = na.omit(as.integer(familydata$Number_of_Seeds_Sowed)) - 
-#   na.omit(as.integer(familydata$`Number_of_Seedlings_Germinating`))
-# # } else {
-#   familydata$`Number yet to Germinate` = NA
-# }
-# Rename colnames
 
 familydata = familydata %>%
   dplyr::select(FamilyName, "Female_Genotype", "Male_Genotype","Planting_Date","Number_of_Plants", "First_Bagging_Date",            
@@ -94,3 +93,16 @@ familydata$`Total Seeds Extracted` = NULL
 
 colnames(familydata) = gsub("_"," ", names(familydata))
 colnames(yamdata) = gsub("_"," ", names(yamdata))
+
+
+# set data types
+
+# yamdata[,grep("Date", names(yamdata))] %<>% mutate_all(as.Date)
+# yamdata[,grep("Genotype", names(yamdata))] %<>% mutate_all(as.factor)
+# yamdata[,c(grep("Total", names(yamdata)), grep("Number", names(yamdata)))] %<>% mutate_all(as.integer)
+# 
+# familydata$FamilyName = as.factor(familydata$FamilyName)
+# familydata[, grep("Date", names(familydata))] %<>% mutate_all(as.Date)
+# familydata[,c("Start of Sowing","End of Sowing")] %<>% mutate_all(as.Date, origin="1970-01-01")
+# familydata[,grep(" Genotype", names(familydata))] %<>% mutate_all(as.factor)
+# familydata[,grep("Number ", names(yamdata))] %<>% mutate_all(as.integer)

@@ -36,10 +36,21 @@ data <- function(env_serv) with(env_serv, local({
                   )
   })
   
+  
+  downloadSummaryIn <- reactive({
+    result = summaryIn()
+    result = result[input[["summaryTable_rows_all"]],]
+    
+    if(!is.null(input$summaryTable_rows_selected)){
+      result = result[input$summaryTable_rows_selected,]
+    }
+    result = janitor::remove_empty(result, "cols")
+  })
+  
   output$downloadSummary <- downloadHandler(
     filename = function(){paste("Summary data -", Sys.Date(),".csv")},
     content = function(file) {
-      write.csv(summaryIn(), file, row.names = FALSE)
+      write.csv(downloadSummaryIn(), file, row.names = FALSE)
     }
   )
 
@@ -54,6 +65,7 @@ data <- function(env_serv) with(env_serv, local({
   
   detailsIn <- reactive({
     dt = yamdata
+    dt$Day = NULL
     #dt[dt=='<NA>'] <- NA
     id = input$summaryTable_cell_clicked$value
     
@@ -98,10 +110,22 @@ data <- function(env_serv) with(env_serv, local({
                                  searchHighlight=T, stateSave = TRUE))
   })
    
+   
+   downloadDetailsIn <- reactive({
+     result = detailsIn()
+     result = result[input[["detailsTable_rows_all"]],]
+     
+     if(!is.null(input$detailsTable_rows_selected)){
+       result = result[input$detailsTable_rows_selected,]
+     }
+     result = janitor::remove_empty(result, "cols")
+   })
+   
+   
    output$downloadDetails <- downloadHandler(
      filename = function(){paste(detailsName(),"-", Sys.Date(),".csv")},
      content = function(file) {
-       write.csv(detailsIn(), file, row.names = FALSE)
+       write.csv(downloadDetailsIn(), file, row.names = FALSE)
      }
    )
    

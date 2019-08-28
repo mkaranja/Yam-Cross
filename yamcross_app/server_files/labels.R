@@ -1,7 +1,7 @@
 # label file
 Labels_pdf<-yamdata[, c("PlantName","Bagging Date", "BagCode", "Day","CrossNumber","Pollination Date")]
-bagDates = Labels_pdf$`Bagging Date`
-pollinationDates = Labels_pdf$`Pollination Date`
+bagDates = c(unique(na.omit(Labels_pdf$`Bagging Date`)))
+pollinationDates = c(unique(na.omit(Labels_pdf$`Pollination Date`)), Sys.Date())
 
 
 labels <- function(env_serv) with(env_serv, local({
@@ -10,16 +10,17 @@ labels <- function(env_serv) with(env_serv, local({
   output$selVarOut <- renderUI({
     div(
       column(3,
-          selectizeInput('variable', 'Select variable to barcode', c('BagCode', 'CrossNumber'), selected = 'BagCode', width='90%')),
+             selectizeInput('variable', 'Select variable to barcode', c('BagCode', 'CrossNumber'), selected = 'BagCode', width='90%')),
       column(3,
              conditionalPanel("input.variable=='BagCode'",
-                              dateInput('bagDate', 'Select Bagging Date', value = max(na.omit(bagDates)), min = max(na.omit(bagDates)), max = max(na.omit(bagDates)))
-                              ),
+                              dateInput('bagDate', 'Select Bagging Date', value = max(bagDates), min = min(bagDates), max = max(bagDates))
+             ),
              conditionalPanel("input.variable=='CrossNumber'",
-                              dateInput('pollinationDate', 'Select Pollination Date', value = max(na.omit(pollinationDates)), min = max(na.omit(pollinationDates)), max =max(na.omit(pollinationDates)))
-                              )
+                              dateInput('pollinationDate', 'Select Pollination Date', value = max(pollinationDates), min = min(pollinationDates), 
+                                        max =max(pollinationDates))
              )
-          
+      )
+      
     )
   })
  
@@ -61,12 +62,12 @@ labels <- function(env_serv) with(env_serv, local({
   observeEvent(input$make_pdf,{
     output$labels_previewOut <- renderUI({
       div(
-        column(6, offset = 3,
-          box(width=12, height = hght(), status = 'warning', solidHeader = T,
-            plotOutput("label_preview", height = hght(), width = wdth())
-            ), br(),br(),br(), hr(),
-          column(4, offset=1, paste("Label Height: ", hght())),
-          column(4,paste("Label Width: ", wdth()))
+        column(6, offset = 6,
+                box(width=12, height = hght(), status = 'info', solidHeader = T,
+                  plotOutput("label_preview", height = hght(), width = wdth())
+                  ), br(),br(),br(), hr(),
+                column(4, offset=1, paste("Label Height: ", hght())),
+                column(4,paste("Label Width: ", wdth()))
           ),
         column(6)
         )
@@ -128,12 +129,14 @@ labels <- function(env_serv) with(env_serv, local({
   
   # text indicator that pdf finished making
   
+  pdf_name = paste0('data/labels/labels', Sys.Date())
+  pdf_copy = paste0(pdf_name,'.pdf')
   
   observeEvent(input$make_pdf, {
     # When the button is clicked, wrap the code in a call to `withBusyIndicatorServer()`
     withBusyIndicatorServer("make_pdf", {
       Sys.sleep(1)
-      baRcodeR::custom_create_PDF(user=FALSE, Labels = dataInput()[, input$check_make_labels_columns_selected], name = 'barcode_labels', 
+      baRcodeR::custom_create_PDF(user=FALSE, Labels = dataInput()[, input$check_make_labels_columns_selected], name = pdf_name, 
                                   type = input$type, ErrCorr = input$err_corr, Fsz = input$font_size, Across = input$across, ERows = 0, ECols = 0, 
                                   trunc = input$trunc, numrow = input$numrow, numcol = input$numcol, page_width = input$page_width, 
                                   page_height = input$page_height, height_margin = input$height_margin, width_margin = input$width_margin, 
@@ -148,7 +151,7 @@ labels <- function(env_serv) with(env_serv, local({
       paste(input$filename,".pdf")
     },
     content = function(file) {
-      file.copy("barcode_labels.pdf", file)
+      file.copy(pdf_copy, file)
     },
     contentType = "application/pdf"
   )

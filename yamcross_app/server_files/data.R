@@ -30,7 +30,7 @@ data <- function(env_serv) with(env_serv, local({
   output$summaryTable <- DT::renderDataTable({
    
     DT::datatable(summaryIn(), filter = 'top', rownames = FALSE, escape = FALSE, 
-                  options = list(pageLength = 5, lengthMenu = c(5, 10, 50, 100, 500,1000),
+                  options = list(pageLength = 20, lengthMenu = c(5, 10, 20, 50, 100, 500,1000),
                                  searchHighlight=T, stateSave = TRUE),
                   selection=list(mode="single", target="cell")
                   )
@@ -66,7 +66,7 @@ data <- function(env_serv) with(env_serv, local({
   detailsIn <- reactive({
     dt = yamdata
     dt$Day = NULL
-    #dt[dt=='<NA>'] <- NA
+    
     id = input$summaryTable_cell_clicked$value
     
     if(length(id)>0 && id %in% yamdata$FamilyName){
@@ -83,12 +83,13 @@ data <- function(env_serv) with(env_serv, local({
     } 
     if(nrow(dt)>0){
       dt %<>%
-        dplyr::select(FamilyName, everything()) %>%
+        dplyr::select(Site, FamilyName, everything()) %>%
         janitor::remove_empty("cols")
     } else {
       dt %<>%
         janitor::remove_empty("cols")
     }
+    return(dt)
   })
   
   detailsName <- reactive({
@@ -105,11 +106,11 @@ data <- function(env_serv) with(env_serv, local({
   
    output$detailsTable <- DT::renderDataTable({
     
-    DT::datatable(detailsIn(), filter = 'top', rownames = FALSE, escape = FALSE, 
+    datatable(detailsIn(), filter = 'top', rownames = FALSE, escape = FALSE, 
                   options = list(pageLength = 5, lengthMenu = c(5, 10, 50, 100, 500,1000),
-                                 searchHighlight=T, stateSave = TRUE))
-  })
-   
+                                 searchHighlight=T, stateSave = F))} 
+     #server = FALSE
+  )
    
    downloadDetailsIn <- reactive({
      result = detailsIn()
@@ -121,7 +122,10 @@ data <- function(env_serv) with(env_serv, local({
      result = janitor::remove_empty(result, "cols")
    })
    
-   
+   # number of rows selected
+   output$nrows <- renderUI({
+     paste("Number of rows selected/ filtered: ", nrow(downloadDetailsIn()))
+   })
    output$downloadDetails <- downloadHandler(
      filename = function(){paste(detailsName(),"-", Sys.Date(),".csv")},
      content = function(file) {

@@ -18,34 +18,25 @@ suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(naniar))
 suppressPackageStartupMessages(library(shinycssloaders))
 suppressPackageStartupMessages(library(baRcodeR))
-suppressPackageStartupMessages(library(qrencoder))
-
-
-
-suppressPackageStartupMessages(library(baRcodeR))
 
 source("helpers.R") # Load all the code needed to show feedback on a button click
 
-
 yamdata = read.csv("data/yamdata.csv") %>%
   mutate_all(as.character)
-#yamdata[,grep("Date", names(yamdata))] %<>% mutate_all(as.Date)
-yamdata[,grep("_Genotype", names(yamdata))] %<>% mutate_all(as.factor)
+yamdata[,grep("Date", names(yamdata))] %<>% mutate_all(anytime::anydate)
 yamdata[,c(grep("Total_", names(yamdata)), grep("Number_", names(yamdata)))] %<>% mutate_all(as.integer)
 
 familydata = read.csv("data/familydata.csv") %>%
   mutate_all(as.character)
-familydata$FamilyName = as.factor(familydata$FamilyName)
-familydata[, grep("Date", names(familydata))] %<>% mutate_all(as.Date)
-familydata[,c("Start_of_Sowing","End_of_Sowing")] %<>% mutate_all(as.Date, origin="1970-01-01")
-familydata[,grep("_Genotype", names(familydata))] %<>% mutate_all(as.factor)
+familydata[, grep("Date", names(familydata))] %<>% mutate_all(anytime::anydate)
+familydata[,c("Start_of_Sowing","End_of_Sowing")] %<>% mutate_all(anytime::anydate)
 familydata[,grep("Number_", names(yamdata))] %<>% mutate_all(as.integer)
 
 # Clean data
 yamdata$FamilyName = ifelse(!is.na(yamdata$Male_Genotype),paste0(yamdata$Female_Genotype,"/",yamdata$Male_Genotype),"")
 
 yamdata = yamdata %>%
-  dplyr::select(PlantName, Planting_Date, Bagging_Date, CrossNumber, Female_Genotype, Male_Genotype, everything())
+  dplyr::select(Site, FamilyName, PlantName, Genotype, Planting_Date, Bagging_Date, CrossNumber, Female_Genotype, Male_Genotype, everything())
 
 yamdt = yamdata %>%
   dplyr::filter(!is.na(Male_Genotype))
@@ -71,7 +62,7 @@ yamdt %<>%
 yam = dplyr::left_join(yamdata[,c("FamilyName", "Female_Genotype", "Male_Genotype",
                                   "Planting_Date")], yamdt, by = "FamilyName") %>%
   dplyr::filter(!is.na(Male_Genotype)) %>%
-  unique()
+   unique()
 yamdata$BagNo = NULL
 
 
@@ -97,12 +88,16 @@ colnames(yamdata) = gsub("_"," ", names(yamdata))
 
 # set data types
 
-# yamdata[,grep("Date", names(yamdata))] %<>% mutate_all(as.Date)
-# yamdata[,grep("Genotype", names(yamdata))] %<>% mutate_all(as.factor)
-# yamdata[,c(grep("Total", names(yamdata)), grep("Number", names(yamdata)))] %<>% mutate_all(as.integer)
-# 
-# familydata$FamilyName = as.factor(familydata$FamilyName)
-# familydata[, grep("Date", names(familydata))] %<>% mutate_all(as.Date)
-# familydata[,c("Start of Sowing","End of Sowing")] %<>% mutate_all(as.Date, origin="1970-01-01")
-# familydata[,grep(" Genotype", names(familydata))] %<>% mutate_all(as.factor)
-# familydata[,grep("Number ", names(yamdata))] %<>% mutate_all(as.integer)
+yamdata[,grep("Date", names(yamdata), value = T)] %<>% mutate_all(anytime::anydate)
+yamdata[,c("PlantName","Genotype","Female Genotype","Male Genotype","Site","Pollinator Name","FamilyName")] %<>% mutate_all(as.factor)
+yamdata[,c("Day","Number of Flowers","Number of Fruits","Total Fruits","Total Seeds Extracted")] %<>% mutate_all(as.integer)
+
+
+ffacs <- c("FamilyName","Female Genotype","Male Genotype", "Storage Location")
+fdates = grep("Date", names(familydata), value = T)
+fnums <- c(grep("Number", names(familydata), value = T), grep("Total", names(familydata), value = T),
+           "Available Seeds", "Seedlings Surviving","Germination Rate")
+
+familydata[, ffacs] %<>% mutate_all(as.factor)
+familydata[,fdates] %<>% mutate_all(anytime::anydate)
+familydata[,fnums] %<>% mutate_all(as.integer)

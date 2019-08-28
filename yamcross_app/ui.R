@@ -1,8 +1,8 @@
 
 source("ui_files/tabs.R")
-
 # Begin shinyUI -----------------------------------------------------------
 # _________________________________________________________________________
+
 
 jsResetCode <- "shinyjs.reset2 = function() {history.go(0)}" # Define the js method that resets the page
 
@@ -41,27 +41,25 @@ shinyUI(
             ),
             
             #### DATA TABLES ####
-            navbarMenu("Data Tables",
-                tabPanel(
+            tabPanel(
                     title = "Data Tables", icon = icon("table", lib = "font-awesome"), br(),br(),br(),br(),
                     
                     dataTab
                 ),
+            
+            # Labels
+            tabPanel(
+                title = "Barcodes", icon = icon("qrcode", lib = "font-awesome"), br(),br(),br(),
                 
-                # Labels
-                tabPanel(
-                    title = "Download barcodes", icon = icon("qrcode", lib = "font-awesome"), br(),br(),br(),br(),
-                    
-                    labelsTab
-                )
+                labelsTab
             ),
             
             #### ABOUT ####
             navbarMenu("About", 
-                    icon = icon("question", lib = "font-awesome"),
-                    
-                    tabPanel(a("using yamcross", href = "usingyamcross.html", target="_blank", icon=icon("question", lib = "font-awesome"))),
-                    tabPanel(a("Code on github", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github", lib = "font-awesome")))
+                    icon = icon("question", lib = "font-awesome"), #br(),br(),br(),br(),
+                    #aboutTab
+                     tabPanel(a("using yamcross", href = "usingyamcross.html", target="_blank", icon=icon("question", lib = "font-awesome"))),
+                     tabPanel(a("Code on github", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github", lib = "font-awesome")))
                     
                  
              )

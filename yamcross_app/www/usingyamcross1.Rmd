@@ -1,19 +1,27 @@
 ---
-title: Using Yamcross Mobile App
+title: "Using yamcross"
+date: "`r Sys.Date()`"
 output:
-  html_document:
-    theme: yeti
-    highlight: zenburn
-    css: styles.css
-    toc: true
-    number_sections: true
-    toc_float:
-      collapsed: true
-      smooth_scroll: true
+  rmdformats::material:
+    highlight: kate
 ---
-<br>
 
----
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="90")
+opts_chunk$set(echo=FALSE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=90)
+```
 
 # Getting started
 
@@ -34,10 +42,7 @@ output:
   
   * Computer with internet access
   
-
-<br>
-
----
+  
 
 # Trial/ pollination block
 
@@ -45,12 +50,7 @@ The trials used in yamcross must include number of plants per plot and the trial
   
 To check if these information is included, in <b>yambase</b>, go to the <b>trial details </b>page
 
-<br>
-
 ![](docs/plantingdate.gif)
-
-<b> Add planting date </b>
-
 To add planting date, click on "Edit Trial Details", select the planting date in the date section.
 
 <br> 
@@ -58,10 +58,6 @@ To add planting date, click on "Edit Trial Details", select the planting date in
 <b>Plants per plot</b>
 
 ![](docs/nplants.gif)
-
-<br> 
-
----
 
 # Crossing plan or wishlist
 
@@ -103,9 +99,7 @@ c. Select the Male Trial as shown
 ![](docs/selectAccessions.GIF)
 </div>
 <div class = "col-md-4"> <br>
-
 <br>
-
 a. Under the Female Accessions Names, select the Female accessions
 
 b. For each Female accession, select the Male accessions in order of priority as indicated
@@ -123,9 +117,7 @@ c. Click <b>Next</b>
 ![](docs/selectPlots.GIF)
 </div>
 <div class = "col-md-4"> <br>
-
 <br>
-
 In the resulting dialog box, check the select all female plots or scroll to check one by one female plot
 
 Then click on <b> Create Wishlist</b>
@@ -140,23 +132,18 @@ Then click on <b> Create Wishlist</b>
 ![](docs/sent.GIF)
 </div>
 <div class = "col-md-4"> <br>
-
 <br>
-
 If all goes well, the message in the fig should be displayed next. Otherwise repeat the steps above
 </div>
 </div>
 
 
-To explore other different ways of creating a crossing plan, follow the yambase link https://solgenomics.github.io/sgn/03_managing_breeding_data/03_06.html##cross-wishlist
-
+#### To explore other different ways of creating a crossing plan, follow the yambase link https://solgenomics.github.io/sgn/03_managing_breeding_data/03_06.html##cross-wishlist
 
 <br>
 
----
 
 # Field plants barcode labels
-
 
 In <b>yambase</b>, go to <b>manage menu</b> then <b>Label Designer</b>
 
@@ -165,7 +152,6 @@ In <b>yambase</b>, go to <b>manage menu</b> then <b>Label Designer</b>
 ![](docs/labeldesigner.GIF)
 </div>
 <div class = "col-md-4"> 
-
 a. Data source - select the Trial
 
 b. Select page format
@@ -186,7 +172,6 @@ d. Set the label width and label height.
 ![](docs/labels.GIF)
 </div>
 <div class = "col-md-4"> 
-
 a. To create a barcode, under Type, select 2D barcode
 
 b. Under Field, select plant_name, then click Add
@@ -198,11 +183,9 @@ c. Download the barcode labels as pdf file by clicking the download button
 </div>
 </div>
 
-For details on label designer, go to http://solgenomics.github.io/sgn/03_managing_breeding_data/03_12.html
 
-<br>
+#### For details on label designer, go to http://solgenomics.github.io/sgn/03_managing_breeding_data/03_12.html
 
----
 
 # Device (tablets) setup
 
@@ -218,7 +201,6 @@ On your tablet, open ODK collect. Go to <b>Menu</b> as shown in the fig below an
 
 ![](menu.png)
 
-
 Tab on <b>Server</b> and change the login to as
 
 <div class = "row">
@@ -226,7 +208,8 @@ Tab on <b>Server</b> and change the login to as
 ![](docs/login.png)
 </div>
 <div class = "col-md-8"> <br>
-
+<br>
+<br>
 <br>
 
 <b>URL:</b> <i> https://odk.ona.io</i>
@@ -278,10 +261,6 @@ On the home screen, go to <b>"Fill Blank Form"</b> and select <b>YAMCROSS_Test</
 Use the forward or backward buttons or swipes to navigate to your app.<br>
 <i>More details to be found under <b>data collection</b> tab</i>
 
-<br>
-
----
-
 # Data collection
 
 <b>Notes:</b>
@@ -290,7 +269,7 @@ Use the forward or backward buttons or swipes to navigate to your app.<br>
 
 * Once you are done for the day, the data collected must be syched to the central server, ensure that your tablet is connected to wifi/celluar in order to submit the collected data. It is always advisable to ensure that the data has been submitted and no error is encountered during this process.
 
-## Bagging
+### 1. Bagging
 Multiple bags in one plant can be recorded at one go before saving and submiting the form
 
 a. Scan the plant barcode
@@ -304,7 +283,7 @@ c. In the pop-up box that follows, select <b>"ADD GROUP"</b> which is same as ad
 <b>NB:</b> Step (c) must be repeated until all bags have been recorded and tagged with unique ID by selecting "ADD GROUP"
 
 
-## Pollination
+### 2. Pollination
 
 a. Scan the bag ID of the female plant
 
@@ -316,9 +295,9 @@ d. Scan the male genotype selected in step c above
 
 e. Print the crossID barcode and tag the bag
 
-<b> Proceed with the CrossID generated in pollination (step 2 above)</b>
+#### <b> Proceed with the CrossID generated in pollination (step 2 above)</b>
 
-## Fruit set
+### 3. Fruit set
 
 a. Scan the CrossID
 
@@ -326,7 +305,7 @@ b. Select date of fruit set
 
 c. Count the number of fruit sets
 
-## Fruit harvest
+### 4. Fruit harvest
 
 a. Scan the CrossID
 
@@ -334,7 +313,7 @@ b. Select date of fruit harvest
 
 c. Count the total number of fruits harvested
 
-## Seed processing
+### 5. Seed processing
 
 a. Scan the CrossID
 
@@ -343,10 +322,10 @@ b. Select date of seed processing
 c. Count the total number of seeds 
 
 
-<b> At this point, a new-id, FamilyID is generated in yambase which should be used to proceed in the next steps</b>
+#### <b> At this point, a new-id, FamilyID is generated in yambase which should be used to proceed in the next steps</b>
 
 
-## Sowing
+### 6. Sowing
 
 a. Scan the FamilyID
 
@@ -354,7 +333,7 @@ b. Select date of sowing
 
 c. Enter the number of seeds sowed
 
-## Germination
+### 7. Germination
 
 Germination can be recorded multiple times whenever seedlings have germinated
 
@@ -364,7 +343,7 @@ b. Select date of seedling germination
 
 c. Count the number of seedling germinating
 
-## Transplanting
+### 8. Transplanting
 
 a. Scan the FamilyID
 
@@ -372,7 +351,7 @@ b. Select date of transplanting
 
 c. Count the number of seedlings transplanted
 
-## Seedling survival
+### 9. Seedling survival
 
 a. Scan the FamilyID
 
@@ -380,7 +359,7 @@ b. Select date of recording seedling survival
 
 c. Count the number of seedlings surviving
 
-## Tuber harvest
+### 10. Tuber harvest
 
 a. Scan the FamilyID
 
@@ -388,7 +367,7 @@ b. Select date of tuber harvest
 
 c. Count the number of tubers harvested
 
-## Sprouting of tubers
+### 11. Sprouting of tubers
 
 a. Scan the FamilyID
 
@@ -396,6 +375,5 @@ b. Select date of sprouting
 
 c. Count the number of tubers sprouting
 
----
 
-<b> End of yamcross data collection</b>
+#### <b> End of yamcross data collection</b>

@@ -84,13 +84,15 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
                        DT::dataTableOutput("detailsTable"))
                  )
              )
-           )
+           ), uiOutput('nrows')
     )
 )
   
   labelsTab <- div(
     fluidRow(
       includeCSS("www/AdminLTE.css"), # for activating shinydashboard/plus widgets
+      tags$p(style = "color: black; font-size: 28px; text-align: center;","Barcode generator"),
+      tags$p(style = "color: green; font-size: 18px; text-align: center;","Generate and download barcodes in a pdf file"), hr(),
       
       sidebarLayout(
         sidebarPanel(width = 3,
@@ -139,7 +141,7 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
               actionBttn("make_pdf", "Generate", color = 'success', icon = icon('play'), size = 'sm', style = 'jelly')), hr(),
             
             column(8,
-                   textInput("filename", "Enter PDF file name", value = "LabelsOutput", placeholder = 'type name of pdf to download')),
+                   textInput("filename", "Enter PDF file name", value = paste0("labels", Sys.Date()), placeholder = 'type name of pdf to download')),
             column(4, br(),
                    downloadBttn('downloadpdf', 'PDF', size = 'sm', color = 'primary', style = 'unite')),
             verbatimTextOutput('txt33')
@@ -149,19 +151,14 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
         mainPanel(
           
           # output elements
+        
           fluidRow(
-            tags$p(style = "color: black; font-size: 28px; text-align: center;","Barcode generator"),
-            tags$p(style = "color: green; font-size: 18px; text-align: center;","Generate and download barcodes in a pdf file"), br(),
-            
-            tags$p(style = "color: #FF8C00; font-size: 16px; text-align: center;", "Preview")
-            ),
-            fluidRow(
-                uiOutput('labels_previewOut')
-              ), br(), hr(),
-            fluidRow(
-                uiOutput('selVarOut')
-            ),
-             
+              uiOutput('labels_previewOut')
+            ), br(), hr(),
+          fluidRow(
+              uiOutput('selVarOut')
+          ),
+           
           fluidRow(   
             tags$p(style = "color:green; font-size: 18px; text-align: left;","Click on any cell in table below corresponding to the desired column to select field for barcode information"), br(),
             
@@ -179,7 +176,12 @@ dataTab <- navlistPanel(id="dataTabs", widths = c(2,9), selected = "Summary Tabl
   )
  aboutTab <- navlistPanel(
    id = "aboutTabs", widths = c(2,10), 
-   tabPanel(a("using yamcross", href = "usingyamcross.html", target="_blank", icon=icon("question", lib = "font-awesome"))),
-   tabPanel(a("Code on github", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github", lib = "font-awesome")))
+   tabPanel('This application',
+            column(7,
+              includeMarkdown("www/docs/datatable.md")
+                )
+            ),
+   tabPanel(a("Using yamcross Mobile App", href = "usingyamcross.html", target="_blank", icon=icon("question", lib = "font-awesome"))),
+   tabPanel(a("Code", href = 'https://github.com/mkaranja/Yam-Cross', target="_blank", icon=icon("github", lib = "font-awesome")))
  )
  
